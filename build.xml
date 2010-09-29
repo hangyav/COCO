@@ -5,6 +5,7 @@
     <property name="classes.dir" value="${build.dir}/classes"/>
     <property name="jar.dir"     value="${build.dir}/jar"/>
 	<property name="lib.dir"     value="lib"/>
+	<property environment="env"/>
 
 	    <path id="classpath">
 			<fileset dir="${lib.dir}" includes="**/*.jar"/>
@@ -19,12 +20,15 @@
     </target>
 
     <target name="run" depends="compile">
-		<copy file="${classes.dir}/COCO_.class" todir="home/hangyav/.imagej/plugins/"/>
+		<exec executable="cp">
+			<arg value="${classes.dir}/COCO_.class" />
+			<arg value="${env.HOME}/.imagej/plugins/" />
+		</exec>
 		<exec executable="imagej" />
     </target>
 
-    <target name="clean-build" depends="clean,compile"/>
+    <target name="clean-run" depends="clean,run"/>
 
-    <target name="main" depends="clean,run"/>
+    <target name="main" depends="clean,compile"/>
 
 </project>
