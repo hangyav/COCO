@@ -1,1 +1,14 @@
 Image processing application for detecting coins. It only detect HUF typed money.
+
+===================================
+COMPILING
+===================================
+Run command: ant
+
+===================================
+RUNNING
+===================================
+Copy the build/classes/COCO_.class file to the imagej's plugins folder then run imagej
+OR
+Use command: ant run 
+This only works on Linux systems. It copies the COCO_.class file to the imagej's plugins folder and runs imagej.
