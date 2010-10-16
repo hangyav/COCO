@@ -1,4 +1,6 @@
 import ij.*;
+import ij.gui.Roi;
+import ij.plugin.filter.Binary;
 import ij.plugin.filter.PlugInFilter;
 import ij.process.*;
 
@@ -27,8 +29,13 @@ public class COCO_ implements PlugInFilter{
 	*
 	* @param ip Az objektum kezeli a kepet.
 	*/
-	public void run(ImageProcessor ip){
-		ip.invert();
+	public void run(ImageProcessor ip2){
+		new ImageConverter(image).convertToGray8();
+		ImageProcessor ip = image.getProcessor();
+		ip.autoThreshold();
+		BinaryProcessor bp = new BinaryProcessor(new ByteProcessor(ip.getBufferedImage()));
+		bp.dilate();
+		bp.erode();
 		image.updateAndDraw();
 	}
 }
