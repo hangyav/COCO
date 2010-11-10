@@ -25,18 +25,30 @@ public class COCO_ implements PlugInFilter{
 	}
 
 	private void prepare(ImageProcessor ip){
-		//new ImageConverter(image).convertToGray8();
-		//ImageProcessor ip = image.getProcessor();
+		int foreground, background;
+		foreground = Prefs.blackBackground?255:0;
+		if (ip.isInvertedLut()){
+			foreground = 255 - foreground;
+		}
+		background = 255 - foreground;
+
 		ip.autoThreshold();
 		//elkereses ide
-		BinaryProcessor bp = new BinaryProcessor(new ByteProcessor(ip.getBufferedImage()));
-		bp.erode();
-		bp.erode();
-		bp.dilate();
-		bp.dilate();
+		ByteProcessor bp = (ByteProcessor)ip.convertToByte(false);
+		//close:
+		bp.dilate(1,background);
+		bp.erode(1,background);
+
 		Binary b = new Binary();
 		b.setup("fill", image);
 		b.run(ip);
+
+		//felesleges pottyek eltavolitasa:
+		bp.erode(2,background);
+		bp.dilate(2,background);
+
+		bp.outline();
+
 		//FloodFiller ff = new FloodFiller(ip);
 		//ff.particleAnalyzerFill();
 	}
