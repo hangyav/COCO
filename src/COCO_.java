@@ -19,18 +19,12 @@ public class COCO_ implements PlugInFilter{
 	* @return Milyen tipusú képet kezel a plugin (pl.: mindent, 8bit, stb.).
 	*/
 	public int setup(String arg, ImagePlus im){
-		image = im;
+		image = im;//ezt lehetne clone-ozni
 		new ImageConverter(image).convertToGray8();
 		return DOES_ALL; //Milyen kepeket kezel a plugin (ALL)
 	}
 
-	/**
-	* A metodus hajtja vegre a megfelelo trszformaciot a kapott
-	* {@code ImageProcessor} segitsegevel.
-	*
-	* @param ip Az objektum kezeli a kepet.
-	*/
-	public void run(ImageProcessor ip){
+	private void prepare(ImageProcessor ip){
 		//new ImageConverter(image).convertToGray8();
 		//ImageProcessor ip = image.getProcessor();
 		ip.autoThreshold();
@@ -45,6 +39,16 @@ public class COCO_ implements PlugInFilter{
 		b.run(ip);
 		//FloodFiller ff = new FloodFiller(ip);
 		//ff.particleAnalyzerFill();
+	}
+
+	/**
+	* A metodus hajtja vegre a megfelelo transzformaciot a kapott
+	* {@code ImageProcessor} segitsegevel.
+	*
+	* @param ip Az objektum kezeli a kepet.
+	*/
+	public void run(ImageProcessor ip){
+		prepare(ip);
 		image.updateAndDraw();
 	}
 }
