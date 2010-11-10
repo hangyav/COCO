@@ -4,6 +4,7 @@ import ij.plugin.filter.Binary;
 import ij.plugin.filter.PlugInFilter;
 import ij.process.*;
 import java.util.Set;
+import java.util.Iterator;
 import COCO.Hough;
 import COCO.Circle;
 
@@ -62,9 +63,20 @@ public class COCO_ implements PlugInFilter{
 		prepare(ip);
 		else if(i == 2){
 			Set<Circle> circles = Hough.runHough(ip, (int)Circle.MIN_5, (int)Circle.MAX_5, 1, 240, 10);
+			drawCircles(ip, circles);
 			System.out.println(circles);
 		}
 		image.updateAndDraw();
 	}
 
+	private void drawCircles(ImageProcessor ip, Set<Circle> set){
+		Iterator<Circle> it = set.iterator();
+		ip.setColor(java.awt.Color.WHITE);
+		while(it.hasNext()){
+			Circle c = it.next();
+			int r = (int)c.getRadius()+5;
+			OvalRoi or = new OvalRoi((int)c.getX()-r, (int)c.getY()-r, r*2, r*2);
+			ip.fill(or);
+		}
+	}
 }

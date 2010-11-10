@@ -66,7 +66,7 @@ public class Hough{
 		Set<Circle> set = getCenterPointsByThreshold(threshold);
 		drawCircles(circlespixels, set);
 
-		new ImagePlus("Hough Space [r="+radiusMin+"]", newip).show(); // Shows only the hough space for the minimun radius
+		//new ImagePlus("Hough Space [r="+radiusMin+"]", newip).show(); // Shows only the hough space for the minimun radius
 		new ImagePlus(set.size()+" Circles Found", circlesip).show();
 		return set;
     }
