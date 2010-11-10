@@ -65,30 +65,82 @@ public class COCO_ implements PlugInFilter{
 	* @param ip Az objektum kezeli a kepet.
 	*/
 	public void run(ImageProcessor ip){
-		java.io.BufferedReader in = new java.io.BufferedReader(
-			new java.io.InputStreamReader(System.in));
         GenericDialog gd = new GenericDialog("COCO", IJ.getInstance());
         gd.addNumericField("Feladat :", 0, 0);
 		gd.showDialog();
 		int i = (int)gd.getNextNumber();
 		if(i == 1)
-		prepare(ip);
+			prepare(ip);
 		else if(i == 2){
-			Set<Circle> circles = Hough.runHough(ip, (int)Circle.MIN_5, (int)Circle.MAX_5, 1, 240, 10);
+			int tresh = 400;
+			/*System.out.println("5os keresese");
+			Set<Circle> circles = Hough.runHough(ip, (int)Circle.MIN_5, (int)Circle.MAX_5, 1, tresh, 10);
 			drawCircles(ip, circles);
-			System.out.println(circles);
+			System.out.println("5-os erme " + circles.size() + " db :" + circles);
+			image.updateAndDraw();
+			System.out.println("10es keresese");
+			circles = Hough.runHough(ip, (int)Circle.MIN_10, (int)Circle.MAX_10, 1, tresh, 10);
+			drawCircles(ip, circles);
+			System.out.println("10-es erme " + circles.size() + " db :" + circles);
+			image.updateAndDraw();
+			System.out.println("20as keresese");
+			circles = Hough.runHough(ip, (int)Circle.MIN_20, (int)Circle.MAX_20, 1, tresh, 10);
+			drawCircles(ip, circles);
+			System.out.println("20-as erme " + circles.size() + " db :" + circles);
+			image.updateAndDraw();
+			System.out.println("50es keresese");
+			circles = Hough.runHough(ip, (int)Circle.MIN_50, (int)Circle.MAX_50, 1, tresh, 10);
+			drawCircles(ip, circles);
+			System.out.println("50-es erme " + circles.size() + " db :" + circles);
+			image.updateAndDraw();
+			System.out.println("100as keresese");
+			circles = Hough.runHough(ip, (int)Circle.MIN_100, (int)Circle.MAX_100, 1, tresh, 10);
+			drawCircles(ip, circles);
+			System.out.println("100-as erme " + circles.size() + " db :" + circles);
+			image.updateAndDraw();
+			System.out.println("200as keresese");
+			circles = Hough.runHough(ip, (int)Circle.MIN_200, (int)Circle.MAX_200, 1, tresh, 10);
+			drawCircles(ip, circles);
+			System.out.println("200-as erme " + circles.size() + " db :" + circles);
+			image.updateAndDraw();*/
+
+			System.out.println("5os keresese");
+			Set<Circle> circles = Hough.runHough(ip, (int)Circle.AVG_5, 249, 10);
+			drawCircles(ip, circles);
+			System.out.println("5-os erme " + circles.size() + " db :" + circles);
+			image.updateAndDraw();
+			System.out.println("10es keresese");
+			circles = Hough.runHough(ip, (int)Circle.AVG_10, tresh, 10);
+			drawCircles(ip, circles);
+			System.out.println("10-es erme " + circles.size() + " db :" + circles);
+			image.updateAndDraw();
+			System.out.println("20as keresese");
+			circles = Hough.runHough(ip, (int)Circle.AVG_20, tresh, 10);
+			drawCircles(ip, circles);
+			System.out.println("20-as erme " + circles.size() + " db :" + circles);
+			image.updateAndDraw();
+			System.out.println("50es keresese");
+			circles = Hough.runHough(ip, (int)Circle.AVG_50, tresh, 10);
+			drawCircles(ip, circles);
+			System.out.println("50-es erme " + circles.size() + " db :" + circles);
+			image.updateAndDraw();
+			System.out.println("100as keresese");
+			circles = Hough.runHough(ip, (int)Circle.AVG_100, tresh, 10);
+			drawCircles(ip, circles);
+			System.out.println("100-as erme " + circles.size() + " db :" + circles);
+			image.updateAndDraw();
+			System.out.println("200as keresese");
+			circles = Hough.runHough(ip, (int)Circle.AVG_200, tresh, 10);
+			drawCircles(ip, circles);
+			System.out.println("200-as erme " + circles.size() + " db :" + circles);
+			image.updateAndDraw();
 		}
 		image.updateAndDraw();
 	}
 
 	private void drawCircles(ImageProcessor ip, Set<Circle> set){
 		Iterator<Circle> it = set.iterator();
-		ip.setColor(java.awt.Color.WHITE);
-		while(it.hasNext()){
-			Circle c = it.next();
-			int r = (int)c.getRadius()+5;
-			OvalRoi or = new OvalRoi((int)c.getX()-r, (int)c.getY()-r, r*2, r*2);
-			ip.fill(or);
-		}
+		while(it.hasNext())
+			it.next().draw(ip, java.awt.Color.WHITE);
 	}
 }

@@ -1,6 +1,7 @@
 package COCO;
 
 import java.awt.Point;
+import ij.gui.OvalRoi;
 
 /**
 * Egy kort reprezental. A kozeppontjat es a sugarat tarolja.
@@ -21,8 +22,15 @@ public class Circle extends Point{
 	public static final double MIN_100 = 167.445;
 	public static final double MAX_200 = 203.856;
 	public static final double MIN_200 = 197.191;
+	public static final double AVG_5 = 152.146;
+	public static final double AVG_10 = 175.752;
+	public static final double AVG_20 = 187.836;
+	public static final double AVG_50 = 194.025;
+	public static final double AVG_100 = 169.946;
+	public static final double AVG_200 = 200.909;
 
 	private double radius;
+	private static final int border = 10;
 
 	public Circle(int x, int y, double rad){
 		super(x, y);
@@ -40,6 +48,15 @@ public class Circle extends Point{
 
 	public void setRadius(double r){
 		radius = r;
+	}
+
+	public void draw(ij.process.ImageProcessor ip, java.awt.Color c){
+		//java.awt.Color c2 = ip.getColor();
+		ip.setColor(c);
+		int r = (int)radius + border;
+		OvalRoi or = new OvalRoi((int)getX()-r, (int)getY()-r, r*2, r*2);
+		ip.fill(or);
+		//ip.setColor(c2);
 	}
 
 	public String toString(){

@@ -26,7 +26,9 @@
 			<arg value="${classes.dir}/COCO" />
 			<arg value="${env.HOME}/.imagej/plugins/" />
 		</exec>
-		<exec executable="imagej" />
+		<exec executable="imagej">
+			<arg value="-x 3963" />
+		</exec>
     </target>
 
     <target name="clean-run" depends="clean,run"/>

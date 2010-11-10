@@ -31,6 +31,9 @@ public class Hough{
     private static int lut[][][]; // LookUp Table for rsin e rcos values
 
 
+    public static Set<Circle> runHough(ImageProcessor ip, int rd, int tresh, int vecSize) {
+		return runHough(ip, rd, rd, 1, tresh, vecSize);
+	}
 
     public static Set<Circle> runHough(ImageProcessor ip, int rdMin, int rdMax, int rdInc, int tresh, int vecSize) {
 
