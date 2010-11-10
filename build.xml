@@ -21,7 +21,9 @@
 
     <target name="run" depends="compile">
 		<exec executable="cp">
+			<arg value="-rf" />
 			<arg value="${classes.dir}/COCO_.class" />
+			<arg value="${classes.dir}/COCO" />
 			<arg value="${env.HOME}/.imagej/plugins/" />
 		</exec>
 		<exec executable="imagej" />
