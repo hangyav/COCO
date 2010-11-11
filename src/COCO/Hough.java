@@ -1,13 +1,9 @@
 package COCO;
 
 import ij.*;
-import ij.plugin.filter.PlugInFilter;
 import ij.process.*;
 import java.awt.*;
-import ij.gui.*;
 import java.util.Set;
-import java.util.HashSet;
-import COCO.Circle;
 
 /**
 * Hough transzformaciot kezelo osztaly.
@@ -70,7 +66,7 @@ public class Hough{
 		drawCircles(circlespixels, set);
 
 		//new ImagePlus("Hough Space [r="+radiusMin+"]", newip).show(); // Shows only the hough space for the minimun radius
-		new ImagePlus(set.size()+" Circles Found", circlesip).show();
+		//new ImagePlus(set.size()+" Circles Found", circlesip).show();
 		return set;
     }
 

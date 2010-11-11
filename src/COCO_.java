@@ -57,6 +57,7 @@ public class COCO_ implements PlugInFilter{
 		//FloodFiller ff = new FloodFiller(ip);
 		//ff.particleAnalyzerFill();
 	}
+		static ImageProcessor original;
 
 	/**
 	* A metodus hajtja vegre a megfelelo transzformaciot a kapott
@@ -69,8 +70,10 @@ public class COCO_ implements PlugInFilter{
         gd.addNumericField("Feladat :", 0, 0);
 		gd.showDialog();
 		int i = (int)gd.getNextNumber();
-		if(i == 1)
+		if(i == 1){
+		/*ImageProcessor*/ original = new ColorProcessor(image.getImage());
 			prepare(ip);
+		}
 		else if(i == 2){
 			int tresh = 400;
 			/*System.out.println("5os keresese");
@@ -140,7 +143,10 @@ public class COCO_ implements PlugInFilter{
 
 	private void drawCircles(ImageProcessor ip, Set<Circle> set){
 		Iterator<Circle> it = set.iterator();
-		while(it.hasNext())
-			it.next().draw(ip, java.awt.Color.WHITE);
+		while(it.hasNext()){
+			Circle c = it.next();
+			c.draw(ip, java.awt.Color.WHITE);
+			System.out.println(c.getBlueIntensity((ColorProcessor)original));
+		}
 	}
 }

@@ -1,7 +1,11 @@
 package COCO;
 
+import ij.ImagePlus;
 import java.awt.Point;
 import ij.gui.OvalRoi;
+import ij.gui.Roi;
+import ij.process.ColorProcessor;
+import ij.process.ImageProcessor;
 
 /**
 * Egy kort reprezental. A kozeppontjat es a sugarat tarolja.
@@ -50,13 +54,53 @@ public class Circle extends Point{
 		radius = r;
 	}
 
+	public OvalRoi getRoi(int border){
+		int r = (int)radius + border;
+		return new OvalRoi((int)getX()-r, (int)getY()-r, r*2, r*2);
+	}
+
+	public OvalRoi getRoi(){
+		return getRoi(0);
+	}
+
 	public void draw(ij.process.ImageProcessor ip, java.awt.Color c){
 		//java.awt.Color c2 = ip.getColor();
 		ip.setColor(c);
-		int r = (int)radius + border;
-		OvalRoi or = new OvalRoi((int)getX()-r, (int)getY()-r, r*2, r*2);
+		OvalRoi or = getRoi(border);
 		ip.fill(or);
 		//ip.setColor(c2);
+	}
+
+	public int getBlueIntensity(ColorProcessor ip){
+		int color = 0;
+		OvalRoi or = getRoi();
+		//ip.setMask(or.getMask());
+		/*ip.setRoi(or);
+		ImageProcessor ip2 = ip;
+		ip2.setColor(0);
+		ip2.fillOutside(or);*/
+		byte R[] = new byte[ip.getWidth() * ip.getHeight()],
+				G[] = new byte[ip.getWidth() * ip.getHeight()],
+				B[] = new byte[ip.getWidth() * ip.getHeight()];
+		ip.getRGB(R, G, B);
+		int r = sqr((int)radius);
+		int db = 0;
+		for(int i=(int)(getX()-radius); i<=(int)(getX()+radius); i++){
+			for(int j=(int)(getY()-radius); j<=(int)(getY()+radius); j++){
+				int ter = sqr(i-(int)getX()) + sqr(j-(int)getY());
+				if(ter <= r){
+					color += B[i*j];
+					db++;
+				}
+			}
+		}
+		//new ImagePlus("asdasdasd", ip2).show();
+		//return (int)(color/sqr((int)radius)*Math.PI);
+		return color/db;
+	}
+
+	public static int sqr(int a){
+		return a*a;
 	}
 
 	public String toString(){
