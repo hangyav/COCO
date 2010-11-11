@@ -3,9 +3,8 @@ import ij.gui.*;
 import ij.plugin.filter.Binary;
 import ij.plugin.filter.PlugInFilter;
 import ij.process.*;
-import ij.plugin.Thresholder;
-import java.util.Set;
 import java.util.Iterator;
+import java.util.Set;
 import COCO.Hough;
 import COCO.Circle;
 
@@ -53,9 +52,12 @@ public class COCO_ implements PlugInFilter{
 		bp.erode(2,background);
 		bp.dilate(2,background);
 
-		ip.invertLut();
 		System.out.println(ip.isBinary());
-		//bp.outline();
+		bp.outline();
+		ip.invertLut();
+		ip.invert();
+		bp.applyLut();
+
 
 
 		//ij.plugin.Thresholder thr = new ij.plugin.Thresholder();
