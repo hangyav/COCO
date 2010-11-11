@@ -3,6 +3,7 @@ import ij.gui.Roi;
 import ij.plugin.filter.Binary;
 import ij.plugin.filter.PlugInFilter;
 import ij.process.*;
+import ij.plugin.Thresholder;
 
 public class COCO_ implements PlugInFilter{
 	/**
@@ -47,7 +48,14 @@ public class COCO_ implements PlugInFilter{
 		bp.erode(2,background);
 		bp.dilate(2,background);
 
-		bp.outline();
+		ip.invertLut();
+		System.out.println(ip.isBinary());
+		//bp.outline();
+
+
+		//ij.plugin.Thresholder thr = new ij.plugin.Thresholder();
+		//thr.run("mask");
+		//IJ.run("Make Binary");
 
 		//FloodFiller ff = new FloodFiller(ip);
 		//ff.particleAnalyzerFill();
