@@ -21,10 +21,14 @@
 
     <target name="run" depends="compile">
 		<exec executable="cp">
+			<arg value="-rf" />
 			<arg value="${classes.dir}/COCO_.class" />
+			<arg value="${classes.dir}/COCO" />
 			<arg value="${env.HOME}/.imagej/plugins/" />
 		</exec>
-		<exec executable="imagej" />
+		<exec executable="imagej">
+			<arg value="-x 3932" />
+		</exec>
     </target>
 
     <target name="clean-run" depends="clean,run"/>
