@@ -27,7 +27,7 @@
 			<arg value="${env.HOME}/.imagej/plugins/" />
 		</exec>
 		<exec executable="imagej">
-			<arg value="-x 3963" />
+			<arg value="-x 3932" />
 		</exec>
     </target>
 
