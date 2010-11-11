@@ -7,13 +7,16 @@ import java.util.Iterator;
 import java.util.Set;
 import COCO.Hough;
 import COCO.Circle;
+import java.awt.Font;
 
 public class COCO_ implements PlugInFilter{
 
 	/**
 	* Egy instance (ablak) melyben a kezelt kép megjelenik.
 	*/
-	private ImagePlus image; 
+	private ImagePlus image;
+
+	private ImageProcessor original;
 	
 	/**
 	* A plugin meghivasakor fut le ez a metodus.
@@ -25,6 +28,7 @@ public class COCO_ implements PlugInFilter{
 	*/
 	public int setup(String arg, ImagePlus im){
 		image = im;//ezt lehetne clone-ozni
+		original = new ColorProcessor(image.getImage());
 		new ImageConverter(image).convertToGray8();
 		return DOES_ALL; //Milyen kepeket kezel a plugin (ALL)
 	}
@@ -67,7 +71,6 @@ public class COCO_ implements PlugInFilter{
 		//FloodFiller ff = new FloodFiller(ip);
 		//ff.particleAnalyzerFill();
 	}
-		static ImageProcessor original;
 
 	/**
 	* A metodus hajtja vegre a megfelelo transzformaciot a kapott
@@ -76,15 +79,14 @@ public class COCO_ implements PlugInFilter{
 	* @param ip Az objektum kezeli a kepet.
 	*/
 	public void run(ImageProcessor ip){
-        GenericDialog gd = new GenericDialog("COCO", IJ.getInstance());
+        /*GenericDialog gd = new GenericDialog("COCO", IJ.getInstance());
         gd.addNumericField("Feladat :", 0, 0);
 		gd.showDialog();
 		int i = (int)gd.getNextNumber();
-		if(i == 1){
-		/*ImageProcessor*/ original = new ColorProcessor(image.getImage());
+		if(i == 1){*/
 			prepare(ip);
-		}
-		else if(i == 2){
+		/*}
+		else if(i == 2){*/
 			int tresh = 400;
 			/*System.out.println("5os keresese");
 			Set<Circle> circles = Hough.runHough(ip, (int)Circle.MIN_5, (int)Circle.MAX_5, 1, tresh, 10);
@@ -120,34 +122,41 @@ public class COCO_ implements PlugInFilter{
 			System.out.println("5os keresese");
 			Set<Circle> circles = Hough.runHough(ip, (int)Circle.AVG_5, 249, 10);
 			drawCircles(ip, circles);
+			showCircles("5", original, circles);
 			System.out.println("5-os erme " + circles.size() + " db :" + circles);
 			image.updateAndDraw();
 			System.out.println("10es keresese");
 			circles = Hough.runHough(ip, (int)Circle.AVG_10, tresh, 10);
 			drawCircles(ip, circles);
+			showCircles("10", original, circles);
 			System.out.println("10-es erme " + circles.size() + " db :" + circles);
 			image.updateAndDraw();
 			System.out.println("20as keresese");
 			circles = Hough.runHough(ip, (int)Circle.AVG_20, tresh, 10);
 			drawCircles(ip, circles);
+			showCircles("20", original, circles);
 			System.out.println("20-as erme " + circles.size() + " db :" + circles);
 			image.updateAndDraw();
 			System.out.println("50es keresese");
 			circles = Hough.runHough(ip, (int)Circle.AVG_50, tresh, 10);
 			drawCircles(ip, circles);
+			showCircles("50", original, circles);
 			System.out.println("50-es erme " + circles.size() + " db :" + circles);
 			image.updateAndDraw();
 			System.out.println("100as keresese");
 			circles = Hough.runHough(ip, (int)Circle.AVG_100, tresh, 10);
 			drawCircles(ip, circles);
+			showCircles("100", original, circles);
 			System.out.println("100-as erme " + circles.size() + " db :" + circles);
 			image.updateAndDraw();
 			System.out.println("200as keresese");
 			circles = Hough.runHough(ip, (int)Circle.AVG_200, tresh, 10);
 			drawCircles(ip, circles);
+			showCircles("200", original, circles);
 			System.out.println("200-as erme " + circles.size() + " db :" + circles);
 			image.updateAndDraw();
-		}
+			new ImagePlus("Original", original).show();
+		//}
 		image.updateAndDraw();
 	}
 
@@ -157,6 +166,15 @@ public class COCO_ implements PlugInFilter{
 			Circle c = it.next();
 			c.draw(ip, java.awt.Color.WHITE);
 			System.out.println(c.getBlueIntensity((ColorProcessor)original));
+		}
+	}
+
+	private void showCircles(String msg, ImageProcessor ip, Set<Circle> set){
+		Iterator<Circle> it = set.iterator();
+		ip.setFont(new Font("", 100, 100));
+		while(it.hasNext()){
+			Circle c = it.next();
+			ip.drawString(msg, (int)c.getX(), (int)c.getY());
 		}
 	}
 }
