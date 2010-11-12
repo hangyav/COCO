@@ -2,6 +2,11 @@ import ij.*;
 import ij.gui.*;
 import ij.plugin.filter.Binary;
 import ij.plugin.filter.PlugInFilter;
+import ij.plugin.filter.ParticleAnalyzer;
+import ij.measure.Measurements;
+import ij.measure.ResultsTable;
+import ij.plugin.frame.RoiManager;
+import java.util.Hashtable;
 import ij.process.*;
 import java.util.Iterator;
 import java.util.Set;
@@ -47,26 +52,75 @@ public class COCO_ implements PlugInFilter{
 		//close:
 		bp.dilate(1,background);
 		bp.erode(1,background);
+		ResultsTable rt = new ResultsTable();
+		ParticleAnalyzer panal = new ParticleAnalyzer(ParticleAnalyzer.ADD_TO_MANAGER,Measurements.CENTER_OF_MASS|Measurements.AREA,rt,10000.,2000000.,0.,1.);//inf-nel az egeszet bejeloli...
+		ip.invertLut();
+		panal.analyze(image);
+		ip.invertLut();
+		//ip.invert();
+		RoiManager roiMan = RoiManager.getInstance();
+		Hashtable rois = roiMan.getROIs();
+		Roi[] rois2 = roiMan.getRoisAsArray();
 
 		Binary b = new Binary();
 		b.setup("fill", image);
 		b.run(ip);
-
 		//felesleges pottyek eltavolitasa:
 		bp.erode(2,background);
 		bp.dilate(2,background);
 
+		for(int i=0; i<rois2.length; i++){
+			roiMan.select(i);
+			ip.setColor(255);
+			ip.fill(rois2[i]);
+			//IJ.wait(1000);
+		}
+		
+		//System.out.println(rois);
+		int jjj=1;
+		for(Object o : rois.values()){
+			/*Roi roi = (Roi)o;
+			roiMan.select(jjj++);
+			//ip.setRoi(roi);
+			//roi.getMask().setValue(0);
+			//roi.getMask().fill();
+			IJ.wait(1000);
+			ip.setValue(255);
+			ip.fill(roi.getMask());
+			IJ.wait(1000);*/
+			//System.out.println(o);
+			/*IJ.wait(1000);
+			Roi roi = (Roi)o;
+			ip.setColor(0);
+			ip.fill(roi);*/
+		}
+			//IJ.wait(1000);
+		/*for(int i=1; i<=roiMan.getCount(); i++){
+			roiMan.select(i);
+			ip.setValue(255);
+			ip.fill();
+			IJ.wait(1000);
+			//IJ.run("Set...","255");
+		}*/
+		//roiMan.select(image,-1);
+		//roiMan.runCommand("deselect all");
+		roiMan.close();
+		IJ.run("Select None");
+		
+		System.out.println(rt);
+
+
 		System.out.println(ip.isBinary());
 		bp.outline();
+		IJ.wait(50);
 		ip.invertLut();
 		ip.invert();
-		bp.applyLut();
+		//ip.invert();
+		//bp.applyLut();
+		image.updateAndDraw();
 
 
 
-		//ij.plugin.Thresholder thr = new ij.plugin.Thresholder();
-		//thr.run("mask");
-		//IJ.run("Make Binary");
 
 		//FloodFiller ff = new FloodFiller(ip);
 		//ff.particleAnalyzerFill();
@@ -88,7 +142,7 @@ public class COCO_ implements PlugInFilter{
 		/*}
 		else if(i == 2){*/
 			int tresh = 400;
-			/*System.out.println("5os keresese");
+			System.out.println("5os keresese");
 			Set<Circle> circles = Hough.runHough(ip, (int)Circle.MIN_5, (int)Circle.MAX_5, 1, tresh, 10);
 			drawCircles(ip, circles);
 			System.out.println("5-os erme " + circles.size() + " db :" + circles);
@@ -117,9 +171,9 @@ public class COCO_ implements PlugInFilter{
 			circles = Hough.runHough(ip, (int)Circle.MIN_200, (int)Circle.MAX_200, 1, tresh, 10);
 			drawCircles(ip, circles);
 			System.out.println("200-as erme " + circles.size() + " db :" + circles);
-			image.updateAndDraw();*/
+			image.updateAndDraw();
 
-			System.out.println("5os keresese");
+			/*System.out.println("5os keresese");
 			Set<Circle> circles = Hough.runHough(ip, (int)Circle.AVG_5, 249, 10);
 			drawCircles(ip, circles);
 			showCircles("5", original, circles);
@@ -155,7 +209,7 @@ public class COCO_ implements PlugInFilter{
 			showCircles("200", original, circles);
 			System.out.println("200-as erme " + circles.size() + " db :" + circles);
 			image.updateAndDraw();
-			new ImagePlus("Original", original).show();
+			new ImagePlus("Original", original).show();*/
 		//}
 		image.updateAndDraw();
 	}
