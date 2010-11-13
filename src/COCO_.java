@@ -57,9 +57,17 @@ public class COCO_ implements PlugInFilter{
 		ip.invertLut();
 		panal.analyze(image);
 		ip.invertLut();
+		System.out.println("itt1");
 		RoiManager roiMan = RoiManager.getInstance();
-		Hashtable rois = roiMan.getROIs();
-		Roi[] rois2 = roiMan.getRoisAsArray();
+		//Hashtable rois = roiMan.getROIs();
+		//Roi[] rois2 = roiMan.getRoisAsArray();
+		Roi[] rois2;
+		if(null!=roiMan){
+			rois2 = roiMan.getRoisAsArray();
+		}else{
+			rois2 = new Roi[0];
+		}
+		System.out.println("itt2");
 
 		Binary b = new Binary();
 		b.setup("fill", image);
@@ -67,40 +75,53 @@ public class COCO_ implements PlugInFilter{
 		//felesleges pottyek eltavolitasa:
 		bp.erode(2,background);
 		bp.dilate(2,background);
-		
 		//felesleges kitoltesek kivonasa, 2:
 		for(int i=0; i<rois2.length; i++){
 			roiMan.select(i);
 			ip.setColor(255);
 			ip.fill(rois2[i]);
 		}
-		
-		roiMan.close();
+		if(null!=roiMan){
+			roiMan.close();
+		}
 		IJ.run("Select None");
+		/////////////////////////////
+
 		//objektumok lekerese, hogy korvonalazzuk oket////////////////
-		ImagePlus tempImagePlus = (ImagePlus)image.clone();
-		/*ImageProcessor tempImage = new ColorProcessor(tempImagePlus.getImage());
-		ByteProcessor bp2 = (ByteProcessor)tempImage.convertToByte(false);
-		bp2.erode(2,background);
+		//ImagePlus tempImagePlus = (ImagePlus)image.clone();
+		//ByteProcessor bp2 = new ByteProcessor(image.getImage());
+	//ByteProcessor bp2 = (ByteProcessor)ip.duplicate();
+		//ByteProcessor bp2 = (ByteProcessor)tempImage.convertToByte(false);
+/*		bp.erode(3,background);
+		bp.erode(3,background);
 
 		panal = new ParticleAnalyzer(ParticleAnalyzer.ADD_TO_MANAGER,Measurements.CENTER_OF_MASS|Measurements.AREA,rt,10000.,2000000.,0.,1.);
-		panal.analyze(tempImagePlus);
+		panal.analyze(image,bp);
+		bp.dilate(3,background);
+		bp.dilate(3,background);
+		roiMan = RoiManager.getInstance();
 		Roi[] rois3 = roiMan.getRoisAsArray();
 		for(int i=0; i<rois3.length; i++){
 			roiMan.select(i);
 			ip.setColor(255);
 			ip.fill(rois3[i]);
 		}
+		System.out.println("var3");
 		roiMan.close();
-		IJ.run("Select None");*/
+		IJ.run("Select None");
+*/
 		/////////////////////////////////////////////////////////////
-
-		
+		/*for(int i=0; i<rois2.length; i++){
+			roiMan.select(i);
+			//IJ.wait(1500);
+			ip.setColor(0);
+			ip.fill(rois2[i]);
+		}*/
 		System.out.println(rt);
 
 
 		System.out.println(ip.isBinary());
-		//bp.outline();
+		bp.outline();
 		IJ.wait(50);
 		ip.invertLut();
 		ip.invert();
@@ -161,37 +182,37 @@ public class COCO_ implements PlugInFilter{
 			image.updateAndDraw();*/
 
 			System.out.println("5os keresese");
-			Set<Circle> circles = Hough.runHough(ip, (int)Circle.AVG_5, 249, 10);
+			Set<Circle> circles = Hough.runHough(ip, (int)Circle.AVG_5, tresh-65, 10);//lehet max 15tel magasabbra
 			drawCircles(ip, circles);
 			showCircles("5", original, circles);
 			System.out.println("5-os erme " + circles.size() + " db :" + circles);
 			image.updateAndDraw();
 			System.out.println("10es keresese");
-			circles = Hough.runHough(ip, (int)Circle.AVG_10, tresh+45, 10);
+			circles = Hough.runHough(ip, (int)Circle.AVG_10, tresh+50, 10);
 			drawCircles(ip, circles);
 			showCircles("10", original, circles);
 			System.out.println("10-es erme " + circles.size() + " db :" + circles);
 			image.updateAndDraw();
 			System.out.println("20as keresese");
-			circles = Hough.runHough(ip, (int)Circle.AVG_20, tresh+45, 10);
+			circles = Hough.runHough(ip, (int)Circle.AVG_20, tresh+90, 10);//lehet max 10zel magasabbra, de neha kisebb kellene
 			drawCircles(ip, circles);
 			showCircles("20", original, circles);
 			System.out.println("20-as erme " + circles.size() + " db :" + circles);
 			image.updateAndDraw();
 			System.out.println("50es keresese");
-			circles = Hough.runHough(ip, (int)Circle.AVG_50, tresh, 10);
+			circles = Hough.runHough(ip, (int)Circle.AVG_50, tresh+110, 10);
 			drawCircles(ip, circles);
 			showCircles("50", original, circles);
 			System.out.println("50-es erme " + circles.size() + " db :" + circles);
 			image.updateAndDraw();
 			System.out.println("100as keresese");
-			circles = Hough.runHough(ip, (int)Circle.AVG_100, tresh, 10);
+			circles = Hough.runHough(ip, (int)Circle.AVG_100, tresh-30, 10);
 			drawCircles(ip, circles);
 			showCircles("100", original, circles);
 			System.out.println("100-as erme " + circles.size() + " db :" + circles);
 			image.updateAndDraw();
 			System.out.println("200as keresese");
-			circles = Hough.runHough(ip, (int)Circle.AVG_200, tresh, 10);
+			circles = Hough.runHough(ip, (int)Circle.AVG_200, tresh-45, 10);
 			drawCircles(ip, circles);
 			showCircles("200", original, circles);
 			System.out.println("200-as erme " + circles.size() + " db :" + circles);

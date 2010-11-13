@@ -34,7 +34,7 @@ public class Circle extends Point{
 	public static final double AVG_200 = 200.909;
 
 	private double radius;
-	private static final int border = 10;
+	private static final int border = 13;
 
 	public Circle(int x, int y, double rad){
 		super(x, y);
