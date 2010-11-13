@@ -67,7 +67,7 @@ public class COCO_ implements PlugInFilter{
 		//felesleges pottyek eltavolitasa:
 		bp.erode(2,background);
 		bp.dilate(2,background);
-
+		
 		//felesleges kitoltesek kivonasa, 2:
 		for(int i=0; i<rois2.length; i++){
 			roiMan.select(i);
@@ -77,12 +77,30 @@ public class COCO_ implements PlugInFilter{
 		
 		roiMan.close();
 		IJ.run("Select None");
+		//objektumok lekerese, hogy korvonalazzuk oket////////////////
+		ImagePlus tempImagePlus = (ImagePlus)image.clone();
+		/*ImageProcessor tempImage = new ColorProcessor(tempImagePlus.getImage());
+		ByteProcessor bp2 = (ByteProcessor)tempImage.convertToByte(false);
+		bp2.erode(2,background);
+
+		panal = new ParticleAnalyzer(ParticleAnalyzer.ADD_TO_MANAGER,Measurements.CENTER_OF_MASS|Measurements.AREA,rt,10000.,2000000.,0.,1.);
+		panal.analyze(tempImagePlus);
+		Roi[] rois3 = roiMan.getRoisAsArray();
+		for(int i=0; i<rois3.length; i++){
+			roiMan.select(i);
+			ip.setColor(255);
+			ip.fill(rois3[i]);
+		}
+		roiMan.close();
+		IJ.run("Select None");*/
+		/////////////////////////////////////////////////////////////
+
 		
 		System.out.println(rt);
 
 
 		System.out.println(ip.isBinary());
-		bp.outline();
+		//bp.outline();
 		IJ.wait(50);
 		ip.invertLut();
 		ip.invert();
@@ -149,6 +167,45 @@ public class COCO_ implements PlugInFilter{
 			System.out.println("5-os erme " + circles.size() + " db :" + circles);
 			image.updateAndDraw();
 			System.out.println("10es keresese");
+			circles = Hough.runHough(ip, (int)Circle.AVG_10, tresh+45, 10);
+			drawCircles(ip, circles);
+			showCircles("10", original, circles);
+			System.out.println("10-es erme " + circles.size() + " db :" + circles);
+			image.updateAndDraw();
+			System.out.println("20as keresese");
+			circles = Hough.runHough(ip, (int)Circle.AVG_20, tresh+45, 10);
+			drawCircles(ip, circles);
+			showCircles("20", original, circles);
+			System.out.println("20-as erme " + circles.size() + " db :" + circles);
+			image.updateAndDraw();
+			System.out.println("50es keresese");
+			circles = Hough.runHough(ip, (int)Circle.AVG_50, tresh, 10);
+			drawCircles(ip, circles);
+			showCircles("50", original, circles);
+			System.out.println("50-es erme " + circles.size() + " db :" + circles);
+			image.updateAndDraw();
+			System.out.println("100as keresese");
+			circles = Hough.runHough(ip, (int)Circle.AVG_100, tresh, 10);
+			drawCircles(ip, circles);
+			showCircles("100", original, circles);
+			System.out.println("100-as erme " + circles.size() + " db :" + circles);
+			image.updateAndDraw();
+			System.out.println("200as keresese");
+			circles = Hough.runHough(ip, (int)Circle.AVG_200, tresh, 10);
+			drawCircles(ip, circles);
+			showCircles("200", original, circles);
+			System.out.println("200-as erme " + circles.size() + " db :" + circles);
+			image.updateAndDraw();
+
+
+			/*tresh = 150;
+			System.out.println("5os keresese");
+			circles = Hough.runHough(ip, (int)Circle.AVG_5, 249, 10);
+			drawCircles(ip, circles);
+			showCircles("5", original, circles);
+			System.out.println("5-os erme " + circles.size() + " db :" + circles);
+			image.updateAndDraw();
+			System.out.println("10es keresese");
 			circles = Hough.runHough(ip, (int)Circle.AVG_10, tresh, 10);
 			drawCircles(ip, circles);
 			showCircles("10", original, circles);
@@ -177,7 +234,9 @@ public class COCO_ implements PlugInFilter{
 			drawCircles(ip, circles);
 			showCircles("200", original, circles);
 			System.out.println("200-as erme " + circles.size() + " db :" + circles);
-			image.updateAndDraw();
+			image.updateAndDraw();*/
+
+
 			new ImagePlus("Original", original).show();
 		//}
 		image.updateAndDraw();
