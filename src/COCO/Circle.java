@@ -1,11 +1,8 @@
 package COCO;
 
-import ij.ImagePlus;
 import java.awt.Point;
 import ij.gui.OvalRoi;
-import ij.gui.Roi;
 import ij.process.ColorProcessor;
-import ij.process.ImageProcessor;
 
 /**
 * Egy kort reprezental. A kozeppontjat es a sugarat tarolja.
@@ -33,8 +30,12 @@ public class Circle extends Point{
 	public static final double AVG_100 = 169.946;
 	public static final double AVG_200 = 200.909;
 
+	public static int YELLOW_LEVEL = 100;
+	public static int WHITE_LEVEL = 30;
+
 	private double radius;
 	private static final int border = 13;
+	private int saturation = -1;
 
 	public Circle(int x, int y, double rad){
 		super(x, y);
@@ -50,7 +51,7 @@ public class Circle extends Point{
 		return radius;
 	}
 
-	public void setRadius(double r){
+	public final void setRadius(double r){
 		radius = r;
 	}
 
@@ -71,38 +72,62 @@ public class Circle extends Point{
 		//ip.setColor(c2);
 	}
 
-	public int getBlueIntensity(ColorProcessor ip){
+	public int getHueIntensity(ColorProcessor ip){
+		if(saturation != -1)
+			return saturation;
 		int color = 0;
-		OvalRoi or = getRoi();
-		//ip.setMask(or.getMask());
-		/*ip.setRoi(or);
-		ImageProcessor ip2 = ip;
-		ip2.setColor(0);
-		ip2.fillOutside(or);*/
-		byte R[] = new byte[ip.getWidth() * ip.getHeight()],
-				G[] = new byte[ip.getWidth() * ip.getHeight()],
-				B[] = new byte[ip.getWidth() * ip.getHeight()];
-		ip.getRGB(R, G, B);
-		int r = sqr((int)radius);
 		int db = 0;
+		byte H[] = new byte[ip.getWidth() * ip.getHeight()],
+				S[] = new byte[ip.getWidth() * ip.getHeight()],
+				B[] = new byte[ip.getWidth() * ip.getHeight()];
+		ip.getHSB(H, S, B);
+		int r = sqr((int)radius);
 		for(int i=(int)(getX()-radius); i<=(int)(getX()+radius); i++){
 			for(int j=(int)(getY()-radius); j<=(int)(getY()+radius); j++){
 				int ter = sqr(i-(int)getX()) + sqr(j-(int)getY());
 				if(ter <= r){
-					color += B[i*j];
 					db++;
+					int pos = j*ip.getWidth() + i;
+					int cv = (S[pos]&255);
+					if((S[pos]&255) <70){
+						//ip.set(pos, 1000);
+						cv = 0;
+					}
+					try{
+						color += cv;
+					}catch(IndexOutOfBoundsException e){
+						System.out.println(e.getMessage());
+					}
 				}
 			}
 		}
-		//new ImagePlus("asdasdasd", ip2).show();
-		//return (int)(color/sqr((int)radius)*Math.PI);
-		return color/db;
+		saturation = color/db;
+		return saturation;
+	}
+
+	public boolean isYellow(ColorProcessor cp){
+		if(getHueIntensity(cp) > YELLOW_LEVEL)
+			return true;
+		return false;
+	}
+
+	public boolean isWhite(ColorProcessor cp){
+		if(getHueIntensity(cp) < WHITE_LEVEL)
+			return true;
+		return false;
+	}
+
+	public boolean isTwoColored(ColorProcessor cp){
+		if(!isYellow(cp) && !isWhite(cp))
+			return true;
+		return false;
 	}
 
 	public static int sqr(int a){
 		return a*a;
 	}
 
+	@Override
 	public String toString(){
 		return "Circle{x=" + getX() + " y=" + getY() + " radius=" + getRadius() + "}";
 	}
