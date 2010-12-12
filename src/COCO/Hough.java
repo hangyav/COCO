@@ -1,6 +1,5 @@
 package COCO;
 
-import ij.*;
 import ij.process.*;
 import java.awt.*;
 import java.util.Set;
@@ -28,10 +27,19 @@ public class Hough{
 
 
     public static Set<Circle> runHough(ImageProcessor ip, int rd, int tresh, int vecSize) {
-		return runHough(ip, rd, rd, 1, tresh, vecSize);
+		return runHough(ip, rd, rd, 1, tresh, vecSize, -1);
+	}
+
+    public static Set<Circle> runHough(ImageProcessor ip, int rd, int tresh, int vecSize, int type) {
+		return runHough(ip, rd, rd, 1, tresh, vecSize, type);
 	}
 
     public static Set<Circle> runHough(ImageProcessor ip, int rdMin, int rdMax, int rdInc, int tresh, int vecSize) {
+		return runHough(ip, rdMin, rdMax, 1, tresh, vecSize, -1);
+	}
+
+
+    public static Set<Circle> runHough(ImageProcessor ip, int rdMin, int rdMax, int rdInc, int tresh, int vecSize, int type) {
 
         imageValues = (byte[])ip.getPixels();
         Rectangle r = ip.getRoi();
@@ -62,7 +70,7 @@ public class Hough{
 		byte[] circlespixels = (byte[])circlesip.getPixels();
 
 		// Mark the center of the found circles in a new image
-		Set<Circle> set = getCenterPointsByThreshold(threshold);
+		Set<Circle> set = getCenterPointsByThreshold(threshold, type);
 		drawCircles(circlespixels, set);
 
 		//new ImagePlus("Hough Space [r="+radiusMin+"]", newip).show(); // Shows only the hough space for the minimun radius
@@ -211,7 +219,7 @@ public class Hough{
 
     @param threshold The threshold used to select the higher point of Hough Space
     */
-    private static Set<Circle> getCenterPointsByThreshold (int threshold) {
+    private static Set<Circle> getCenterPointsByThreshold (int threshold, int type) {
 
 
         int xMax = -1;
@@ -241,7 +249,7 @@ public class Hough{
             }
 
 			if(xMax != -1 && yMax != -1){
-				Circle p = new Circle(xMax, yMax, rMax);
+				Circle p = new Circle(xMax, yMax, rMax, type);
 				if(set.add(p)){
 					clearNeighbours(xMax,yMax,rMax);
 				}

@@ -3,6 +3,7 @@ package COCO;
 import java.awt.Point;
 import ij.gui.OvalRoi;
 import ij.process.ColorProcessor;
+import java.awt.Color;
 
 /**
 * Egy kort reprezental. A kozeppontjat es a sugarat tarolja.
@@ -30,12 +31,21 @@ public class Circle extends Point{
 	public static final double AVG_100 = 169.946;
 	public static final double AVG_200 = 200.909;
 
+	public static final Color COLOR_5 = Color.YELLOW;
+	public static final Color COLOR_10 = Color.WHITE;
+	public static final Color COLOR_20 = Color.YELLOW;
+	public static final Color COLOR_50 = Color.WHITE;
+	public static final Color COLOR_100 = Color.GRAY;
+	public static final Color COLOR_200 = Color.GRAY;
+
 	public static int YELLOW_LEVEL = 100;
 	public static int WHITE_LEVEL = 30;
 
-	private double radius;
 	private static final int border = 13;
+
+	private double radius;
 	private int saturation = -1;
+	private int value;
 
 	public Circle(int x, int y, double rad){
 		super(x, y);
@@ -45,6 +55,26 @@ public class Circle extends Point{
 	public Circle(Point p, double rad){
 		super(p);
 		setRadius(rad);
+	}
+
+	public Circle(int x, int y, double rad, int value){
+		super(x, y);
+		setType(value);
+		setRadius(rad);
+	}
+
+	public Circle(Point p, double rad, int value){
+		super(p);
+		setType(value);
+		setRadius(rad);
+	}
+
+	public final int getType() {
+		return value;
+	}
+
+	public final void setType(int value){
+		this.value = value;
 	}
 
 	public double getRadius(){
@@ -125,6 +155,36 @@ public class Circle extends Point{
 
 	public static int sqr(int a){
 		return a*a;
+	}
+
+	public Color getColor(ColorProcessor cp){
+		if(isYellow(cp))
+			return Color.YELLOW;
+		if(isWhite(cp))
+			return Color.WHITE;
+		return Color.GRAY;
+	}
+
+	public Color getColorByType(){
+		switch(value){
+			case 5: return COLOR_5;
+			case 10: return COLOR_10;
+			case 20: return COLOR_20;
+			case 50: return COLOR_50;
+			case 100: return COLOR_100;
+			case 200: return COLOR_200;
+			default:return null;
+		}
+	}
+
+	public static double getDistance(Circle c1, Circle c2){
+		double xDis = c1.getX()-c2.getX();
+		double yDis = c1.getY()-c2.getY();
+		return Math.sqrt(xDis*xDis + yDis*yDis);
+	}
+
+	public double getDistance(Circle c){
+		return getDistance(this, c);
 	}
 
 	@Override

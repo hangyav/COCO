@@ -12,6 +12,10 @@ import java.util.Set;
 import COCO.Hough;
 import COCO.Circle;
 import java.awt.Font;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 
 public class COCO_ implements PlugInFilter{
 
@@ -142,115 +146,50 @@ public class COCO_ implements PlugInFilter{
 	public void run(ImageProcessor ip){
 		prepare(ip);
 		int tresh = 300;
-		/*System.out.println("5os keresese");
-		Set<Circle> circles = Hough.runHough(ip, (int)Circle.MIN_5, (int)Circle.MAX_5, 1, tresh, 10);
-		drawCircles(ip, circles);
-		System.out.println("5-os erme " + circles.size() + " db :" + circles);
-		image.updateAndDraw();
-		System.out.println("10es keresese");
-		circles = Hough.runHough(ip, (int)Circle.MIN_10, (int)Circle.MAX_10, 1, tresh, 10);
-		drawCircles(ip, circles);
-		System.out.println("10-es erme " + circles.size() + " db :" + circles);
-		image.updateAndDraw();
-		System.out.println("20as keresese");
-		circles = Hough.runHough(ip, (int)Circle.MIN_20, (int)Circle.MAX_20, 1, tresh, 10);
-		drawCircles(ip, circles);
-		System.out.println("20-as erme " + circles.size() + " db :" + circles);
-		image.updateAndDraw();
-		System.out.println("50es keresese");
-		circles = Hough.runHough(ip, (int)Circle.MIN_50, (int)Circle.MAX_50, 1, tresh, 10);
-		drawCircles(ip, circles);
-		System.out.println("50-es erme " + circles.size() + " db :" + circles);
-		image.updateAndDraw();
-		System.out.println("100as keresese");
-		circles = Hough.runHough(ip, (int)Circle.MIN_100, (int)Circle.MAX_100, 1, tresh, 10);
-		drawCircles(ip, circles);
-		System.out.println("100-as erme " + circles.size() + " db :" + circles);
-		image.updateAndDraw();
-		System.out.println("200as keresese");
-		circles = Hough.runHough(ip, (int)Circle.MIN_200, (int)Circle.MAX_200, 1, tresh, 10);
-		drawCircles(ip, circles);
-		System.out.println("200-as erme " + circles.size() + " db :" + circles);
-		image.updateAndDraw();*/
+		Set<Circle>  allcircles = new HashSet<Circle>();
 
 		System.out.println("5os keresese");
-		Set<Circle> circles = Hough.runHough(ip, (int)Circle.AVG_5, tresh-65, 10);//lehet max 15tel magasabbra
+		Set<Circle> circles = Hough.runHough(ip, (int)Circle.AVG_5, tresh-65, 10, 5);//lehet max 15tel magasabbra
+		allcircles.addAll(circles);
 		drawCircles(ip, circles);
-		showCircles("5", original, circles);
-		System.out.println("5-os erme " + circles.size() + " db :" + circles);
 		image.updateAndDraw();
+
 		System.out.println("10es keresese");
-		circles = Hough.runHough(ip, (int)Circle.AVG_10, tresh+50, 10);
+		circles = Hough.runHough(ip, (int)Circle.AVG_10, tresh+50, 10, 10);
+		allcircles.addAll(circles);
 		drawCircles(ip, circles);
-		showCircles("10", original, circles);
-		System.out.println("10-es erme " + circles.size() + " db :" + circles);
 		image.updateAndDraw();
+
 		System.out.println("20as keresese");
-		circles = Hough.runHough(ip, (int)Circle.AVG_20, tresh+90, 10);//lehet max 10zel magasabbra, de neha kisebb kellene
+		circles = Hough.runHough(ip, (int)Circle.AVG_20, tresh+90, 10, 20);//lehet max 10zel magasabbra, de neha kisebb kellene
+		allcircles.addAll(circles);
 		drawCircles(ip, circles);
-		showCircles("20", original, circles);
-		System.out.println("20-as erme " + circles.size() + " db :" + circles);
 		image.updateAndDraw();
+
 		System.out.println("50es keresese");
-		circles = Hough.runHough(ip, (int)Circle.AVG_50, tresh+110, 10);
+		circles = Hough.runHough(ip, (int)Circle.AVG_50, tresh+110, 10, 50);
+		allcircles.addAll(circles);
 		drawCircles(ip, circles);
-		showCircles("50", original, circles);
-		System.out.println("50-es erme " + circles.size() + " db :" + circles);
 		image.updateAndDraw();
+
 		System.out.println("100as keresese");
-		circles = Hough.runHough(ip, (int)Circle.AVG_100, tresh-30, 10);
+		circles = Hough.runHough(ip, (int)Circle.AVG_100, tresh-30, 10, 100);
+		allcircles.addAll(circles);
 		drawCircles(ip, circles);
-		showCircles("100", original, circles);
-		System.out.println("100-as erme " + circles.size() + " db :" + circles);
 		image.updateAndDraw();
+
 		System.out.println("200as keresese");
-		circles = Hough.runHough(ip, (int)Circle.AVG_200, tresh-45, 10);
+		circles = Hough.runHough(ip, (int)Circle.AVG_200, tresh-45, 10, 200);
+		allcircles.addAll(circles);
 		drawCircles(ip, circles);
-		showCircles("200", original, circles);
-		System.out.println("200-as erme " + circles.size() + " db :" + circles);
 		image.updateAndDraw();
+		System.out.println();
 
+		circles = analyze(allcircles);
+		showCircles(original, circles);
+		//new ImagePlus("Original", original).show();
 
-		/*tresh = 150;
-		System.out.println("5os keresese");
-		Set<Circle> circles = Hough.runHough(ip, (int)Circle.AVG_5, tresh, 10);
-		drawCircles(ip, circles);
-		showCircles("5", original, circles);
-		System.out.println("5-os erme " + circles.size() + " db :" + circles);
-		image.updateAndDraw();
-		System.out.println("10es keresese");
-		circles = Hough.runHough(ip, (int)Circle.AVG_10, tresh, 10);
-		drawCircles(ip, circles);
-		showCircles("10", original, circles);
-		System.out.println("10-es erme " + circles.size() + " db :" + circles);
-		image.updateAndDraw();
-		System.out.println("20as keresese");
-		circles = Hough.runHough(ip, (int)Circle.AVG_20, tresh, 10);
-		drawCircles(ip, circles);
-		showCircles("20", original, circles);
-		System.out.println("20-as erme " + circles.size() + " db :" + circles);
-		image.updateAndDraw();
-		System.out.println("50es keresese");
-		circles = Hough.runHough(ip, (int)Circle.AVG_50, tresh, 10);
-		drawCircles(ip, circles);
-		showCircles("50", original, circles);
-		System.out.println("50-es erme " + circles.size() + " db :" + circles);
-		image.updateAndDraw();
-		System.out.println("100as keresese");
-		circles = Hough.runHough(ip, (int)Circle.AVG_100, tresh, 10);
-		drawCircles(ip, circles);
-		showCircles("100", original, circles);
-		System.out.println("100-as erme " + circles.size() + " db :" + circles);
-		image.updateAndDraw();
-		System.out.println("200as keresese");
-		circles = Hough.runHough(ip, (int)Circle.AVG_200, tresh, 10);
-		drawCircles(ip, circles);
-		showCircles("200", original, circles);
-		System.out.println("200-as erme " + circles.size() + " db :" + circles);
-		image.updateAndDraw();*/
-
-		new ImagePlus("Original", original).show();
-
+		image.setProcessor(image.getTitle(), original);
 		image.updateAndDraw();
 	}
 
@@ -258,25 +197,74 @@ public class COCO_ implements PlugInFilter{
 		Iterator<Circle> it = set.iterator();
 		while(it.hasNext()){
 			Circle c = it.next();
-			c.draw(ip, java.awt.Color.WHITE);
-			//System.out.println("Intenzitás: " + c.getBlueIntensity((ColorProcessor)original));
+			if(c.getColor((ColorProcessor)original) == c.getColorByType())
+				c.draw(ip, java.awt.Color.WHITE);
 		}
 	}
 
-	private void showCircles(String msg, ImageProcessor ip, Set<Circle> set){
+	private void showCircles(ImageProcessor ip, Set<Circle> set){
 		Iterator<Circle> it = set.iterator();
 		ip.setFont(new Font("", 100, 100));
 		while(it.hasNext()){
 			Circle c = it.next();
 			if(c.isYellow((ColorProcessor)original))
-				ip.drawString(/*msg*/ "Y", (int)c.getX(), (int)c.getY());
+				ip.drawString("Y", (int)c.getX(), (int)c.getY());
 			if(c.isWhite((ColorProcessor)original))
-				ip.drawString(/*msg*/ "W", (int)c.getX(), (int)c.getY());
+				ip.drawString("W", (int)c.getX(), (int)c.getY());
 			if(c.isTwoColored((ColorProcessor)original))
-				ip.drawString(/*msg*/ "T", (int)c.getX(), (int)c.getY());
-			ip.drawString(/*msg*/ c.getHueIntensity((ColorProcessor)original)+"", (int)c.getX()-100, (int)c.getY()-100);
-			//ip.drawString(msg, (int)c.getX()-100, (int)c.getY()+100);
+				ip.drawString("T", (int)c.getX(), (int)c.getY());
+			ip.drawString(c.getHueIntensity((ColorProcessor)original)+"", (int)c.getX()-100, (int)c.getY()-100);
+			ip.drawString(c.getType()+"", (int)c.getX()+100, (int)c.getY()+100);
 			ip.draw(c.getRoi());
 		}
+	}
+
+	private Set<Circle> analyze(Set<Circle> circles){
+		Set<Circle> cir = new HashSet<Circle>();
+		Iterator<Set<Circle>> it = getCircleGroups(circles).iterator();
+		while(it.hasNext()){
+			Set<Circle> cset = it.next();
+			if(cset.size() == 1){
+				cir.add(cset.iterator().next());
+				continue;
+			}
+			Iterator<Circle> cit = cset.iterator();
+			while(cit.hasNext()){
+				Circle c = cit.next();
+				if(c.getColor((ColorProcessor)original) == c.getColorByType()){
+					cir.add(c);
+					break;
+				}
+			}
+		}
+		return cir;
+	}
+
+	private List<Set<Circle>> getCircleGroups(Set<Circle> circles){
+		List<Set<Circle>> list = new ArrayList<Set<Circle>>();
+		Iterator<Circle> it = circles.iterator();
+		while(it.hasNext()){
+			Circle c = it.next();
+			boolean b = true;
+			Iterator<Set<Circle>> lit = list.iterator();
+			while(lit.hasNext() && b){
+				Set<Circle> cset = lit.next();
+				Iterator<Circle> cit = cset.iterator();
+				while(cit.hasNext()){
+					Circle cir = cit.next();
+					if(c.getDistance(cir) < Circle.AVG_5/2){
+						cset.add(c);
+						b = false;
+						break;
+					}
+				}
+			}
+			if(b){
+				Set<Circle> cset = new HashSet<Circle>();
+				cset.add(c);
+				list.add(cset);
+			}
+		}
+		return list;
 	}
 }
