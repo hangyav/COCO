@@ -38,8 +38,8 @@ public class Circle extends Point implements Comparable<Circle>{
 	public static final Color COLOR_100 = Color.GRAY;
 	public static final Color COLOR_200 = Color.GRAY;
 
-	public static int YELLOW_LEVEL = 80;
-	public static int WHITE_LEVEL = 30;
+	public static int YELLOW_LEVEL = 200;
+	public static int WHITE_LEVEL = 100;
 
 	private static final int border = 13;
 
@@ -126,7 +126,8 @@ public class Circle extends Point implements Comparable<Circle>{
 						if(cv <70){
 							//ip.set(pos, 1000);
 							cv = 0;
-						}
+						}else
+							cv = 255;
 						color += cv;
 					}catch(IndexOutOfBoundsException e){}
 				}
@@ -137,13 +138,13 @@ public class Circle extends Point implements Comparable<Circle>{
 	}
 
 	public boolean isYellow(ColorProcessor cp){
-		if(getHueIntensity(cp) > YELLOW_LEVEL)
+		if(getHueIntensity(cp) >= YELLOW_LEVEL)
 			return true;
 		return false;
 	}
 
 	public boolean isWhite(ColorProcessor cp){
-		if(getHueIntensity(cp) < WHITE_LEVEL)
+		if(getHueIntensity(cp) <= WHITE_LEVEL)
 			return true;
 		return false;
 	}

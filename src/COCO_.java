@@ -11,6 +11,7 @@ import java.util.Iterator;
 import java.util.Set;
 import COCO.Hough;
 import COCO.Circle;
+import java.awt.Color;
 import java.awt.Font;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -161,6 +162,12 @@ public class COCO_ implements PlugInFilter{
 		drawCircles(ip, circles);
 		image.updateAndDraw();
 
+		System.out.println("100as keresese");
+		circles = Hough.runHough(ip, (int)Circle.AVG_100, tresh, 10, 100);
+		allcircles.addAll(circles);
+		drawCircles(ip, circles);
+		image.updateAndDraw();
+
 		System.out.println("10es keresese");
 		circles = Hough.runHough(ip, (int)Circle.AVG_10, tresh, 10, 10);
 		allcircles.addAll(circles);
@@ -175,12 +182,6 @@ public class COCO_ implements PlugInFilter{
 
 		System.out.println("50es keresese");
 		circles = Hough.runHough(ip, (int)Circle.AVG_50, tresh, 10, 50);
-		allcircles.addAll(circles);
-		drawCircles(ip, circles);
-		image.updateAndDraw();
-
-		System.out.println("100as keresese");
-		circles = Hough.runHough(ip, (int)Circle.AVG_100, tresh, 10, 100);
 		allcircles.addAll(circles);
 		drawCircles(ip, circles);
 		image.updateAndDraw();
@@ -212,18 +213,25 @@ public class COCO_ implements PlugInFilter{
 	private void showCircles(ImageProcessor ip, Set<Circle> set){
 		Iterator<Circle> it = set.iterator();
 		ip.setFont(new Font("", 100, 100));
+		ip.setLineWidth(5);
+		int sum = 0;
 		while(it.hasNext()){
 			Circle c = it.next();
-			if(c.isYellow((ColorProcessor)original))
+			sum += c.getType();
+			ip.setColor(Color.GREEN);
+			ip.draw(c.getRoi());
+			ip.setColor(Color.BLACK);
+			/*if(c.isYellow((ColorProcessor)original))
 				ip.drawString("Y", (int)c.getX()-50, (int)c.getY()-50);
 			if(c.isWhite((ColorProcessor)original))
 				ip.drawString("W", (int)c.getX(), (int)c.getY());
 			if(c.isTwoColored((ColorProcessor)original))
-				ip.drawString("T", (int)c.getX(), (int)c.getY());
-			ip.drawString(c.getHueIntensity((ColorProcessor)original)+"", (int)c.getX()-100, (int)c.getY()-100);
-			ip.drawString(c.getType()+"", (int)c.getX()+50, (int)c.getY()+50);
-			ip.draw(c.getRoi());
+				ip.drawString("T", (int)c.getX(), (int)c.getY());*/
+			//ip.drawString(c.getHueIntensity((ColorProcessor)original)+"", (int)c.getX()-100, (int)c.getY()-100);
+			ip.drawString(c.getType()+"", (int)c.getX(), (int)c.getY());
 		}
+		ip.setColor(Color.ORANGE);
+		ip.drawString(sum + " Ft.", ip.getWidth()/3, 110);
 	}
 
 	private Set<Circle> analyze(Set<Circle> circles){
