@@ -8,7 +8,7 @@ import java.awt.Color;
 /**
 * Egy kort reprezental. A kozeppontjat es a sugarat tarolja.
 */
-public class Circle extends Point{
+public class Circle extends Point implements Comparable<Circle>{
 	/**
 	* Meretek
 	*/
@@ -38,7 +38,7 @@ public class Circle extends Point{
 	public static final Color COLOR_100 = Color.GRAY;
 	public static final Color COLOR_200 = Color.GRAY;
 
-	public static int YELLOW_LEVEL = 100;
+	public static int YELLOW_LEVEL = 80;
 	public static int WHITE_LEVEL = 30;
 
 	private static final int border = 13;
@@ -111,23 +111,24 @@ public class Circle extends Point{
 				S[] = new byte[ip.getWidth() * ip.getHeight()],
 				B[] = new byte[ip.getWidth() * ip.getHeight()];
 		ip.getHSB(H, S, B);
-		int r = sqr((int)radius);
-		for(int i=(int)(getX()-radius); i<=(int)(getX()+radius); i++){
-			for(int j=(int)(getY()-radius); j<=(int)(getY()+radius); j++){
+		double rad = radius;
+		if(value == 20 || value == 200)
+			rad -= 30;
+		int r = sqr((int)rad);
+		for(int i=(int)(getX()-rad); i<=(int)(getX()+rad); i++){
+			for(int j=(int)(getY()-rad); j<=(int)(getY()+rad); j++){
 				int ter = sqr(i-(int)getX()) + sqr(j-(int)getY());
 				if(ter <= r){
 					db++;
 					int pos = j*ip.getWidth() + i;
-					int cv = (S[pos]&255);
-					if((S[pos]&255) <70){
-						//ip.set(pos, 1000);
-						cv = 0;
-					}
 					try{
+						int cv = (S[pos]&255);
+						if(cv <70){
+							//ip.set(pos, 1000);
+							cv = 0;
+						}
 						color += cv;
-					}catch(IndexOutOfBoundsException e){
-						System.out.println(e.getMessage());
-					}
+					}catch(IndexOutOfBoundsException e){}
 				}
 			}
 		}
@@ -185,6 +186,10 @@ public class Circle extends Point{
 
 	public double getDistance(Circle c){
 		return getDistance(this, c);
+	}
+
+	public int compareTo(Circle t) {
+		return (int)t.radius - (int)radius;
 	}
 
 	@Override
