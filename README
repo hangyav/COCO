@@ -8,7 +8,7 @@ Run command: ant
 ===================================
 RUNNING
 ===================================
-Copy the build/classes/COCO_.class file to the imagej's plugins folder then run imagej
+Copy everything from build/classes/ to the imagej's plugins folder then run imagej
 OR
 Use command: ant run 
-This only works on Linux systems. It copies the COCO_.class file to the imagej's plugins folder and runs imagej.
+This only works on Linux systems. It copies everything from build/classes/ to the imagej's plugins folder and runs imagej.
