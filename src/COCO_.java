@@ -244,13 +244,17 @@ public class COCO_ implements PlugInFilter{
 				continue;
 			}
 			Iterator<Circle> cit = cset.iterator();
+			boolean b = false;
 			while(cit.hasNext()){
 				Circle c = cit.next();
 				if(c.getColor((ColorProcessor)original) == c.getColorByType()){
 					cir.add(c);
+					b = true;
 					break;
 				}
 			}
+			if(!b)
+				cir.add(cset.iterator().next());
 		}
 		return cir;
 	}
