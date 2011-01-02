@@ -5,6 +5,7 @@
     <property name="classes.dir" value="${build.dir}/classes"/>
     <property name="jar.dir"     value="${build.dir}/jar"/>
 	<property name="lib.dir"     value="lib"/>
+	<property name="util.dir"    value="util"/>
 	<property environment="env"/>
 
 	    <path id="classpath">
@@ -25,6 +26,11 @@
 			<arg value="${classes.dir}/COCO_.class" />
 			<arg value="${classes.dir}/COCO" />
 			<arg value="${env.HOME}/.imagej/plugins/" />
+		</exec>
+		<exec executable="cp">
+			<arg value="-rf" />
+			<arg value="${util.dir}/COCO-batch.ijm" />
+			<arg value="${env.HOME}/.imagej/macros/"/>
 		</exec>
 		<exec executable="imagej">
 			<arg value="-x 3932" />
